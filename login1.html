@@ -1,0 +1,357 @@
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Docshed Restaurant</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Sans&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="https://th.bing.com/th/id/R.6f4233d72ee6899188cb21e127bbb6fa?rik=xFkL9Rrs%2bwQ00w&riu=http%3a%2f%2fr.ddmcdn.com%2fs_f%2fo_1%2fTLC%2fuploads%2f2016%2f11%2fiStock-184598971.jpg&ehk=2hNdhpQN%2fYcsfdv79tslTqPIDcC2MHKsIAlDlfB4KOk%3d&risl=&pid=ImgRaw&r=0"
+    />
+    <style>
+      .forms-out {
+        margin: 0 auto;
+        font-family: "Fira Sans", sans-serif;
+        padding: 15px 0;
+      }
+      .forms-in {
+        width: 93%;
+        margin: 0 auto;
+        color: rgb(179, 6, 107);
+        padding: 15px 0;
+      }
+      .forms-in div {
+        padding: 30px 20px;
+        border: none;
+        max-width: 350px;
+        margin: 0 auto;
+        background:rgb(212, 212, 212);
+        border-radius: 5px;
+        margin-bottom: 15px;
+        font-weight: bold;
+        border-bottom: 2px solid rgb(241, 220, 220)
+       
+
+      }
+      .forms-in h3 {
+        text-align: center;
+      }
+      .forms-in input {
+        border: none;
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 3px;
+      }
+
+      .forms-in button {
+        border: none;
+        padding: 7px 20px;
+        background: #fc4e0a;
+        color: #000000;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .forms-in button:hover {
+        opacity: 0.7;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      #forgot-password {
+        text-align: center;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      #forgot-password:hover {
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="forms-out">
+      <div class="forms-in">
+        <div id="registration-page" class="hide">
+          <button id="show-login">Waiter login</button>
+          <h3>new waiter login</h3>
+          Email <br />
+          <input type="email" id="registration-email" /><br />
+          Confirm Email <br />
+          <input
+            type="email"
+            id="registration-reemail"
+            autocomplete="disable"
+          /><br />
+          Password <br />
+          <input type="password" id="registration-password" /><br />
+          <center><button id="register">Sign Up</button></center>
+        </div>
+
+        <div id="login-page">
+          <button id="show-register">Sign Up</button>
+          <h3>Sign In</h3>
+          Email <br />
+          <input type="email" id="login-email" /><br />
+          Password <br />
+          <input type="password" id="login-password" /><br />
+          <p id="forgot-password">Forgot Password</p>
+          <center><button id="login">Sign in </button></center>
+        </div>
+
+        <div id="homepage" class="hide">
+          <button id="signout">please continue</button>
+          <h3>welcome back best waiter </h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use-->
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+    apiKey: "AIzaSyCM6l0u-LT9XNiSVNE3MVFO6cqeFCrPaCg",
+    authDomain: "groupa-9cefe.firebaseapp.com",
+    databaseURL: "https://groupa-9cefe-default-rtdb.firebaseio.com",
+    projectId: "groupa-9cefe",
+    storageBucket: "groupa-9cefe.appspot.com",
+    messagingSenderId: "766078440122",
+    appId: "1:766078440122:web:cb572870790e3a71726883",
+    measurementId: "G-P0ES06PTM8"
+  };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script>
+      //invokes firebase authentication.
+      const auth = firebase.auth();
+
+      document.querySelector("#show-register").addEventListener("click", () => {
+        showRegistration();
+      });
+
+      const showRegistration = () => {
+        document.querySelector("#registration-page").classList.remove("hide");
+        document.querySelector("#login-page").classList.add("hide");
+        document.querySelector("#homepage").classList.add("hide");
+      };
+
+      document.querySelector("#show-login").addEventListener("click", () => {
+        showLogin();
+      });
+
+      const showLogin = () => {
+        document.querySelector("#registration-page").classList.add("hide");
+        document.querySelector("#login-page").classList.remove("hide");
+        document.querySelector("#homepage").classList.add("hide");
+      };
+
+      document.querySelector("#signout").addEventListener("click", () => {
+        signOut();
+      });
+
+      const register = () => {
+        const email = document.querySelector("#registration-email").value;
+        const reemail = document.querySelector("#registration-reemail").value;
+        const password = document.querySelector("#registration-password").value;
+
+        if (email.trim() == "") {
+          alert("Enter Email");
+        } else if (password.trim().length < 7) {
+          alert("Password must be at least 7 characters");
+        } else if (email != reemail) {
+          alert("emails do not match");
+        } else {
+          auth
+            .createUserWithEmailAndPassword(email, password)
+            .catch(function (error) {
+              // Handle Errors here.
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              alert(errorMessage);
+              // ...
+            });
+        }
+      };
+
+      document.querySelector("#register").addEventListener("click", () => {
+        register();
+      });
+
+      //register when you hit the enter key
+      document
+        .querySelector("#registration-password")
+        .addEventListener("keyup", (e) => {
+          if (event.keyCode === 13) {
+            e.preventDefault();
+
+            register();
+          }
+        });
+
+      const login = () => {
+        const email = document.querySelector("#login-email").value;
+        const password = document.querySelector("#login-password").value;
+
+        if (email.trim() == "") {
+          alert("Enter Email");
+        } else if (password.trim() == "") {
+          alert("Enter Password");
+        } else {
+          authenticate(email, password);
+        }
+      };
+
+      document.querySelector("#login").addEventListener("click", () => {
+        login();
+      });
+
+      //sign in when you hit enter
+      document
+        .querySelector("#login-password")
+        .addEventListener("keyup", (e) => {
+          if (event.keyCode === 13) {
+            e.preventDefault();
+
+            login();
+          }
+        });
+
+      const authenticate = (email, password) => {
+        const auth = firebase.auth();
+        auth.signInWithEmailAndPassword(email, password);
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(email, password)
+          .catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage);
+          });
+      };
+
+      const showHomepage = () => {
+        document.querySelector("#registration-page").classList.add("hide");
+        document.querySelector("#login-page").classList.add("hide");
+        document.querySelector("#homepage").classList.remove("hide");
+      };
+
+      const signOut = () => {
+        firebase
+          .auth()
+          .signOut()
+          .then(function () {
+            window.location.href = "GALL.html";
+          })
+          .catch(function (error) {
+            alert("error signing out, check network connection");
+          });
+      };
+
+      auth.onAuthStateChanged((firebaseUser) => {
+        if (firebaseUser) {
+          showHomepage();
+        }
+      });
+
+      document
+        .querySelector("#forgot-password")
+        .addEventListener("click", () => {
+          const email = document.querySelector("#login-email").value;
+          if (email.trim() == "") {
+            alert("Enter Email");
+          } else {
+            forgotPassword(email);
+          }
+        });
+
+      const forgotPassword = (email) => {
+        auth
+          .sendPasswordResetEmail(email)
+          .then(function () {
+            alert("email sent");
+          })
+          .catch(function (error) {
+            alert("invalid email or bad network connection");
+          });
+      };
+    </script>
+  <!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<script src="https://www.drv.tw/inc/wd.js?s=rdyismujvd5rndvxxsbu8w"></script></body>
+</html>
+
+<html>
+  <head>
+    <title></title>
+    <style>
+      body {
+        background-image: url('https://th.bing.com/th/id/R.6f4233d72ee6899188cb21e127bbb6fa?rik=xFkL9Rrs%2bwQ00w&riu=http%3a%2f%2fr.ddmcdn.com%2fs_f%2fo_1%2fTLC%2fuploads%2f2016%2f11%2fiStock-184598971.jpg&ehk=2hNdhpQN%2fYcsfdv79tslTqPIDcC2MHKsIAlDlfB4KOk%3d&risl=&pid=ImgRaw&r=0');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+      }
+    </style>
+  </head>
+  <body>
+  <!-- Code injected b
